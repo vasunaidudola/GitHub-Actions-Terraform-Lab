@@ -5,7 +5,8 @@ variable "aws_region" {
 }
 
 variable "bucket_name" {
-  description = "vasu-test-lab-bucket"
+  description = "s3 bucket"
   type        = string
+  default     = "vasu-test-lab-bucket"
 }
 
