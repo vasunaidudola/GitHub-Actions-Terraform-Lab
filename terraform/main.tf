@@ -8,7 +8,7 @@ resource "aws_s3_bucket" "lab_bucket" {
 
   tags = {
     Name        = "terraform-lab-bucket"
-    Environment = "dev"
+    Environment = "Dev"
   }
 }
 
