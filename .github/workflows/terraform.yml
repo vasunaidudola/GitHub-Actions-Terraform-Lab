@@ -1,4 +1,4 @@
-name: Terraform CI/CD (simple lab)
+name: Terraform CI/CD 
 
 on:
   push:
@@ -32,30 +32,34 @@ jobs:
         working-directory: ./terraform
         run: terraform validate
 
-      - name: Terraform Plan (save plan)
+      - name: Terraform Plan
         working-directory: ./terraform
         run: terraform plan -input=false -out=tfplan
 
-      - name: Upload plan artifact
+      - name: Upload terraform folder
         uses: actions/upload-artifact@v4
         with:
-          name: terraform-plan
-          path: terraform/tfplan
+          name: terraform-artifacts
+          path: |
+            terraform/tfplan
+            terraform/.terraform.lock.hcl
+            terraform/.terraform
 
   terraform-apply:
-    name: Terraform Apply (manual approval)
+    name: Terraform Apply
     needs: terraform-plan
     runs-on: ubuntu-latest
     environment: production
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download plan artifact
+      - name: Download terraform folder
         uses: actions/download-artifact@v4
         with:
-          name: terraform-plan
-          path: ./terraform
+          name: terraform-artifacts
+          path: terraform
 
       - name: Setup AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -69,5 +73,4 @@ jobs:
 
       - name: Terraform Apply
         working-directory: ./terraform
-        run: terraform apply -input=false ./tfplan
-
+        run: terraform apply -input=false tfplan
